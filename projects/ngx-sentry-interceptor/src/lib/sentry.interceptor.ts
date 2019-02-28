@@ -38,39 +38,34 @@ export class SentryInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     res: HttpErrorResponse
   ): void {
-    const context = {
-      request: {
-        method: req.method,
-        url: req.url
-      },
-      response: {
-        status: res.status,
-        message: res.message
+
+
+    const domain = this.getDomainName(req.url);
+
+    const event: Sentry.SentryEvent = {
+      message: `${ req.method } request to ${ domain } failed.`,
+      contexts: {
+        'context': {
+          request: {
+            method: req.method,
+            url: req.url
+          },
+          response: {
+            status: res.status,
+            message: res.message
+          }
+        }
       }
     };
 
-    this.reportError(req.url, context);
-  }
-
-  private reportError(url: string, extra: any): void {
-    const domain = this.getDomainName(url);
-
-    Sentry.captureMessage(
-      `HTTP ${extra.request.method} request to ${domain} failed.`
-      // {
-      //   extra,
-      //   logger: 'ngx-raven-interceptor',
-      //   tags: {
-      //     'http-domain': domain
-      //   }
-      // }
-    );
+    Sentry.captureEvent(event);
   }
 
   private getDomainName(url: string): string {
     try {
       return new URL(url).host;
     } catch (e) {
+      console.log(e);
       return '[invalid domain]';
     }
   }
