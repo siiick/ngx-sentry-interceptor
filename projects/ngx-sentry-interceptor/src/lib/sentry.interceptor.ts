@@ -43,7 +43,7 @@ export class SentryInterceptor implements HttpInterceptor {
     const domain = this.getDomainName(req.url);
 
     const event: Sentry.SentryEvent = {
-      message: `${ req.method } request to ${ domain } failed.`,
+      message: `${req.method} request to ${req.url} failed with ${res.status}.`,
       contexts: {
         'context': {
           request: {
