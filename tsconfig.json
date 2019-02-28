@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-sentry-interceptor": [
+        "dist/ngx-sentry-interceptor"
+      ],
+      "ngx-sentry-interceptor/*": [
+        "dist/ngx-sentry-interceptor/*"
+      ]
+    }
   }
 }
